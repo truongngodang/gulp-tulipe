@@ -1,0 +1,25 @@
+{
+  "name": "tulipe",
+  "version": "1.0.0",
+  "description": "Template frontend workflow",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/truongngodang/gulp-tulipe.git"
+  },
+  "keywords": [
+    "Gulp",
+    "Html",
+    "sass",
+    "js"
+  ],
+  "author": "Ngo Dang Truong",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/truongngodang/gulp-tulipe/issues"
+  },
+  "homepage": "https://github.com/truongngodang/gulp-tulipe#readme"
+}
