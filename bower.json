@@ -1,0 +1,28 @@
+{
+  "name": "tulipe",
+  "description": "Template frontend workflow",
+  "main": "index.js",
+  "authors": [
+    "Ngo Dang Truong"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "Gulp",
+    "Html",
+    "sass",
+    "js"
+  ],
+  "homepage": "https://github.com/truongngodang/gulp-tulipe",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "bootstrap": "^3.3.7",
+    "lightbox2": "^2.9.0"
+  }
+}

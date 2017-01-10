@@ -1,0 +1,8 @@
+mixin test(data, length)
+    - for (var i = 0; i < length; i++)
+        if length == 3
+            .this-is-head This is Gulp
+            .item=data[i].title
+        else if length == 4
+            .this-is-head This is Gulp
+            .item=data[i].content

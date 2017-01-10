@@ -1,0 +1,14 @@
+include modual/test/test
+include modual/mixins/mixin
+doctype html
+html
+    head
+    title Tulipe
+    +css('assets/css/main.min.css')
+    body
+        // header
+        header
+        .bg-test
+            +test(test.data, 3)
+            img(src='assets/img/tulipe.jpg', alt="tulipe")
+            +test(test.data, 4)
