@@ -1,0 +1,149 @@
+.agent-listing-item {
+  .agent-name {
+    font-size: 18px;
+    font-weight: $bold;
+    color: $primary-color;
+    margin-bottom: 10px;
+  }
+}
+
+.agent-listing-item.style-1 {
+  margin-bottom: 40px;
+  background-color: $white;
+  .agent-img {
+    width: 260px;
+    float: left;
+    img {
+      width: 100%;
+      border-radius: 3px 0 0 3px;
+    }
+  }
+
+  .agent-body {
+    margin-left: 260px;
+    padding: 36px 20px 10px 40px;
+  }
+
+  .agent-name {
+
+  }
+
+  .agent-title {
+    font-style: italic;
+    font-size: 13px;
+    color: #999999;
+    margin-bottom: 20px;
+  }
+
+  .agent-content {
+    font-size: 14px;
+    line-height: 24px;
+    margin-bottom: 20px;
+  }
+
+  .agent-contact {
+
+  }
+
+  .agent-phone {
+    margin-bottom: 15px;
+    .fa {
+      font-size: 30px;
+      color: $accet-color;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+    .agent-phone-number {
+      font-size: 16px;
+      color: $primary-color;
+    }
+  }
+
+  .agent-social {
+    margin: 0 -8px;
+    float: left;
+    li {
+      float: left;
+      padding: 0 8px;
+      display: inline-block;
+      a {
+        color: #666666;
+        font-size: 14px;
+        .fa {
+          display: inline-block;
+        }
+      }
+    }
+  }
+  //Responsive
+  @include respond-to('small-tablet') {
+    .agent-body {
+      margin-left: 0;
+      float: left;
+      padding: 15px;
+    }
+    .agent-img {
+      padding: 15px 15px;
+      width: 100%;
+      float: left;
+    }
+  }
+}
+
+.agent-listing-item.style-2 {
+  margin-bottom: 50px;
+  min-height: 460px;
+  .agent-img {
+    margin-bottom: 26px;
+    img {
+      width: 100%;
+      border-radius: 3px;
+    }
+  }
+
+  .agent-body {
+
+  }
+  .agent-name {
+    margin-bottom: 20px;
+  }
+
+  .agent-address, .agent-phone {
+    margin-bottom: 5px;
+    .fa {
+      color: $accet-color;
+      font-size: 16px;
+      display: block;
+      float: left;
+      line-height: 22px;
+    }
+    .agent-address-home, .agent-phone-number {
+      font-size: 14px;
+      display: block;
+      margin-left: 20px;
+      line-height: 22px;
+    }
+  }
+
+  .agent-btn {
+    font-size: 12px;
+    font-weight: $bold;
+    text-transform: uppercase;
+    color: #888888;
+    padding: 10px 20px;
+    display: inline-block;
+    background-color: #f1f1f1;
+    box-shadow: 0 1px 1px 0 rgba(217, 217, 217, 1);
+    border-radius: 3px;
+    margin-top:15px;
+    &:hover {
+      @include trasition('fast');
+      background-color: $accet-color;
+      color: $white;
+    }
+
+    .fa {
+      margin-left: 5px;
+    }
+  }
+}

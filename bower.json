@@ -23,6 +23,7 @@
   "dependencies": {},
   "devDependencies": {
     "bootstrap": "^3.3.7",
-    "lightbox2": "^2.9.0"
+    "lightbox2": "^2.9.0",
+    "font-awesome": "^4.7.0"
   }
 }

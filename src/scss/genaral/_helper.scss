@@ -1,0 +1,7 @@
+.clear-padding-row {
+  margin: 0 -15px;
+
+  @include respond-to('desktop') {
+    margin: 0;
+  }
+}

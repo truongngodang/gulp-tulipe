@@ -1,16 +1,10 @@
-.main {
-  color: #000000;
-  content: "test";
-}
+@import "genaral/variables";
+@import "genaral/mediamixins";
+@import "genaral/mixins";
+@import "genaral/reset";
+@import "genaral/helper";
 
-body {
-  background-color: #00b3ee;
-  color: #fff;
-}
-.bg-test {
-  margin: 0 auto;
-  width: 600px;
-  height: 500px;
-  font-family: sans-serif;
-  font-weight: 500;
-}
+@import "components/typography";
+
+@import "layout/body";
+@import "layout/agentListing";

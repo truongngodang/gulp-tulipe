@@ -1,7 +1,7 @@
 //Load in the plugins
 
 const gulp = require('gulp'),
-    sass = require('gulp-ruby-sass'),
+    sass = require('gulp-sass'),
     autoprefixer = require('gulp-autoprefixer'),
     cssnano = require('gulp-cssnano'),
     jshint = require('gulp-jshint'),
@@ -32,16 +32,21 @@ gulp.task('browser-sync', function () {
 
 //Clean up
 gulp.task('clean', function () {
-    return del(['dist/assets/css', 'dist/assets/js', 'dist/assets/img']);
+    return del(['dist/*.html', 'dist/assets/css', 'dist/assets/js', 'dist/assets/img']);
 });
 
 //Build style
+var sourcemaps = require('gulp-sourcemaps');
 gulp.task('styles', function () {
-    return sass('src/scss/main.scss', {style: 'expanded'})
+    return gulp.src('src/scss/main.scss')
+        .pipe(sourcemaps.init())
+        .pipe(sass().on('error', sass.logError))
+        .pipe(sourcemaps.write())
         .pipe(autoprefixer('last 2 version'))
         .pipe(gulp.dest('dist/assets/css'))
         .pipe(rename({suffix: '.min'}))
-        .pipe(cssnano())
+        .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest('dist/assets/css'))
         .pipe(browserSync.stream());
 });
@@ -49,6 +54,10 @@ gulp.task('styles', function () {
 //Build js
 gulp.task('scripts', function () {
     return gulp.src('src/scripts/**/*.js')
+        .pipe(plumber(function (error) {
+            console.log("Error happend!", error.message);
+            this.emit('end');
+        }))
         .pipe(jshint('.jshintrc'))
         .pipe(jshint.reporter('default'))
         .pipe(gulp.dest('dist/assets/js/modules'))
@@ -62,6 +71,10 @@ gulp.task('scripts', function () {
 //Compress Images
 gulp.task('image-min', function () {
     return gulp.src('src/images/**/*')
+        .pipe(plumber(function (error) {
+            console.log("Error happend!", error.message);
+            this.emit('end');
+        }))
         .pipe(imagemin({optimizationLevel: 3, progressive: true, interlaced: true}))
         .pipe(gulp.dest('dist/assets/img'));
 });
@@ -69,18 +82,30 @@ gulp.task('image-min', function () {
 //Compine Images
 gulp.task('images', function () {
     return gulp.src('src/images/**/*')
+        .pipe(plumber(function (error) {
+            console.log("Error happend!", error.message);
+            this.emit('end');
+        }))
         .pipe(gulp.dest('dist/assets/img'));
 });
 
 //Compine fonts
 gulp.task('fonts', function () {
     return gulp.src('src/fonts/**/*')
+        .pipe(plumber(function (error) {
+            console.log("Error happend!", error.message);
+            this.emit('end');
+        }))
         .pipe(gulp.dest('dist/assets/fonts'));
 });
 
 // Build DataJson
 gulp.task('combine-modules-json', function () {
     return gulp.src(['**/*.json', '!**/_*.json'], {cwd: 'src/*/**/data'})
+        .pipe(plumber(function (error) {
+            console.log("Error happend!", error.message);
+            this.emit('end');
+        }))
         .pipe(mergeJson('data-json.json'))
         .pipe(gulp.dest('tmp/data'));
 });
@@ -130,7 +155,7 @@ gulp.task('html', function (cb) {
 //The default task DEV
 gulp.task('dev', function (cb) {
     return gulpSequence(
-        'clean', 'html', 'styles', 'scripts', 'images', 'browser-sync', 'watch',
+        'browser-sync', 'clean', 'html', 'styles', 'scripts', 'images', 'watch',
         cb
     );
 });
@@ -140,7 +165,7 @@ gulp.task('cleanlib', function () {
     return del(['dist/library/*']);
 });
 gulp.task('movelib', ['cleanlib'], function () {
-    gulp.src(['bower_components/*/dist/**'])
+    gulp.src(['bower_components/*/dist/**', 'bower_components/*/css/**', 'bower_components/*/fonts/**'])
         .pipe(gulp.dest('dist/library'))
 });
 

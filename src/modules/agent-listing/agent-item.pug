@@ -1,0 +1,47 @@
+mixin agent-item-style-1(data, number)
+    - for (var i = 0; i < number; i++)
+        .col-lg-6.col-md-12
+            .agent-listing-item.style-1.clearfix
+                .agent-img
+                    img(src='assets/img/'+ data[i].img + '-' + (i+1) + '.jpg', alt='assets/img/'+ data[i].img + (i+1))
+                .agent-body
+                    a(href="#")
+                        h4.agent-name=data[i].name
+                    p.agent-title=data[i].titleJob
+                    p.agent-content=data[i].content
+                    .agent-contact
+                        p.agent-phone
+                            i.fa.fa-phone
+                            span.agent-phone-number=data[i].phone
+                        ul.agent-social
+                            li
+                                a(href='#')
+                                    i.fa.fa-facebook
+                            li
+                                a(href='#')
+                                    i.fa.fa-twitter
+                            li
+                                a(href='#')
+                                    i.fa.fa-skype
+                            li
+                                a(href='#')
+                                    i.fa.fa-linkedin
+
+mixin agent-item-style-2(data, number)
+    - for (var i = 0; i < number; i++)
+        .col-lg-3.col-md-4.col-sm-6
+            .agent-listing-item.style-2.clearfix
+                .agent-img
+                    img(src='assets/img/'+ data[i].img + '-square-' + (i+1) + '.jpg', alt='assets/img/'+ data[i].img + '-square-' + (i+1))
+                .agent-body
+                    a(href="#")
+                        h4.agent-name=data[i].name
+                    .agent-contact
+                        p.agent-address.clearfix
+                            i.fa.fa-home
+                            span.agent-address-home=data[i].address
+                        p.agent-phone.clearfix
+                            i.fa.fa-phone
+                            span.agent-phone-number=data[i].phone
+                    a(href="#").agent-btn View Details
+                        i.fa.fa-angle-double-right

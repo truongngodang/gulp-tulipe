@@ -1,0 +1,11 @@
+include modules/head/head
+include modules/agent-listing/agent-item
+doctype html
+html
+    +head(head.base)
+    body
+        header.header
+            section.agent-listing
+                .container
+                    .row
+                        +agent-item-style-1(agent.list, 4)
