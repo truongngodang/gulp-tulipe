@@ -1,7 +1,6 @@
-
 //Load in the plugins
 
-var gulp = require('gulp'),
+const gulp = require('gulp'),
     sass = require('gulp-ruby-sass'),
     autoprefixer = require('gulp-autoprefixer'),
     cssnano = require('gulp-cssnano'),
@@ -14,14 +13,16 @@ var gulp = require('gulp'),
     cache = require('gulp-cache'),
     del = require('del');
 
-var gutil = require('gulp-util');
-var plumber = require('gulp-plumber');
-var mergeJson = require('gulp-merge-json');
-var gulpSequence = require('gulp-sequence');
-var browserSync = require('browser-sync').create();
+const gutil = require('gulp-util');
+const plumber = require('gulp-plumber');
+const mergeJson = require('gulp-merge-json');
+const gulpSequence = require('gulp-sequence');
+const browserSync = require('browser-sync').create();
+const pug = require('gulp-pug');
+const fs = require('fs');
 
 // Bower sync
-gulp.task('browser-sync', function() {
+gulp.task('browser-sync', function () {
     return browserSync.init({
         server: {
             baseDir: 'dist'
@@ -29,47 +30,55 @@ gulp.task('browser-sync', function() {
     });
 });
 
+//Clean up
+gulp.task('clean', function () {
+    return del(['dist/assets/css', 'dist/assets/js', 'dist/assets/img']);
+});
+
 //Build style
-gulp.task('styles', function() {
-    return sass('src/scss/main.scss', { style: 'expanded' })
+gulp.task('styles', function () {
+    return sass('src/scss/main.scss', {style: 'expanded'})
         .pipe(autoprefixer('last 2 version'))
         .pipe(gulp.dest('dist/assets/css'))
         .pipe(rename({suffix: '.min'}))
         .pipe(cssnano())
         .pipe(gulp.dest('dist/assets/css'))
-        .pipe(notify({ message: 'Style task complete' }))
         .pipe(browserSync.stream());
 });
 
 //Build js
-gulp.task('scripts', function() {
+gulp.task('scripts', function () {
     return gulp.src('src/scripts/**/*.js')
         .pipe(jshint('.jshintrc'))
         .pipe(jshint.reporter('default'))
-        .pipe(gulp.dest('dist/assets/js'))
+        .pipe(gulp.dest('dist/assets/js/modules'))
         .pipe(concat('main.js'))
         .pipe(gulp.dest('dist/assets/js'))
         .pipe(rename({suffix: '.min'}))
         .pipe(uglify())
-        .pipe(gulp.dest('dist/assets/js'))
-        .pipe(notify({ message: 'scripts task complete' }));
+        .pipe(browserSync.stream());
 });
 
 //Compress Images
-gulp.task('images', function() {
+gulp.task('image-min', function () {
     return gulp.src('src/images/**/*')
-        .pipe(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true }))
-        .pipe(gulp.dest('dist/assets/img'))
-        .pipe(notify({ message: 'Images task complete' }));
+        .pipe(imagemin({optimizationLevel: 3, progressive: true, interlaced: true}))
+        .pipe(gulp.dest('dist/assets/img'));
 });
 
-
-//Clean up
-gulp.task('clean', function() {
-    return del(['dist/assets/css', 'dist/assets/js', 'dist/assets/img']);
+//Compine Images
+gulp.task('images', function () {
+    return gulp.src('src/images/**/*')
+        .pipe(gulp.dest('dist/assets/img'));
 });
 
-// = Build DataJson
+//Compine fonts
+gulp.task('fonts', function () {
+    return gulp.src('src/fonts/**/*')
+        .pipe(gulp.dest('dist/assets/fonts'));
+});
+
+// Build DataJson
 gulp.task('combine-modules-json', function () {
     return gulp.src(['**/*.json', '!**/_*.json'], {cwd: 'src/*/**/data'})
         .pipe(mergeJson('data-json.json'))
@@ -82,7 +91,6 @@ gulp.task('combine-modules-data', function () {
         .pipe(gulp.dest('tmp'));
 });
 
-// Service tasks
 gulp.task('combine-data', function (cb) {
     return gulpSequence(
         [
@@ -94,12 +102,10 @@ gulp.task('combine-data', function (cb) {
 });
 
 // Build pug
-var pug = require('gulp-pug');
-var fs = require('fs');
-gulp.task('pug', function(done) {
-    var jsonData = JSON.parse(fs.readFileSync('./tmp/data.json'));
+gulp.task('pug', function (done) {
+    const jsonData = JSON.parse(fs.readFileSync('./tmp/data.json'));
     gulp.src('src/*.pug')
-        .pipe(plumber(function(error){
+        .pipe(plumber(function (error) {
             console.log("Error happend!", error.message);
             this.emit('end');
         }))
@@ -108,12 +114,12 @@ gulp.task('pug', function(done) {
             locals: jsonData
         }))
         .pipe(gulp.dest('dist'))
-        .on('end', done);
+        .on('end', done)
+        .pipe(browserSync.stream());
 });
 
 // Build html
-//The default task DEV
-gulp.task('html', function(cb) {
+gulp.task('html', function (cb) {
     return gulpSequence(
         'combine-data',
         'pug',
@@ -122,38 +128,34 @@ gulp.task('html', function(cb) {
 });
 
 //The default task DEV
-gulp.task('dev', function(cb) {
+gulp.task('dev', function (cb) {
     return gulpSequence(
-        'browser-sync', 'clean', 'html', 'styles', 'scripts', 'images', 'watch',
+        'clean', 'html', 'styles', 'scripts', 'images', 'browser-sync', 'watch',
         cb
     );
 });
 
 //Move lib bower
-gulp.task('cleanlibs', function() {
-    return del(['dist/libs/*', 'src/libs/*']);
+gulp.task('cleanlib', function () {
+    return del(['dist/library/*']);
 });
-gulp.task('movelibs', ['cleanlibs'], function(){
-    gulp.src(['bower_components/*/dist/*.min.js',
-        'bower_components/*/dist/*/*.min.js',
-        'bower_components/*/dist/*.min.css',
-        'bower_components/*/dist/*/*.min.css'])
-        .pipe(gulp.dest('dist/libs'))
-        .pipe(gulp.dest('src/libs'))
+gulp.task('movelib', ['cleanlib'], function () {
+    gulp.src(['bower_components/*/dist/**'])
+        .pipe(gulp.dest('dist/library'))
 });
 
 // Watch
-gulp.task('watch', function() {
+gulp.task('watch', function () {
 
     // Watch .pug files
     gulp.watch(
-        ['src/*/**/data/*.json', 'src/*.pug','src/*/*.pug', 'src/**/*.pug'],
-        ['html', browserSync.reload]);
+        ['src/*/**/data/*.json', 'src/*.pug', 'src/*/*.pug', 'src/**/*.pug'],
+        ['html']);
     // Watch .scss files
     gulp.watch('src/scss/**/*.scss', ['styles']);
 
     // Watch .js files
-    gulp.watch('src/scripts/**/*.js', ['scripts', browserSync.reload]);
+    gulp.watch('src/scripts/**/*.js', ['scripts']);
 
     // Watch image files
     gulp.watch('src/images/**/*', ['images']);
