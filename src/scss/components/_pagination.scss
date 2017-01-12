@@ -1,7 +1,41 @@
 .pagination-ui {
-  .pagination-list {
-    li {
-      display: inline-block;
+
+}
+
+.pagination-list {
+  display: inline-block;
+  li {
+    float: left;
+    width: 36px;
+    height: 36px;
+    border-radius: 50px;
+    display: table;
+    border: 1px solid #e5e5e5;
+    text-align: center;
+    margin: 0 7px;
+    &:hover, &.active {
+      background-color: $primary-color;
+      border-color: $primary-color;
+      a {
+        color: $white;
+      }
+    }
+    &.dot {
+      border: none;
+      vertical-align: bottom;
+      &:hover {
+        background-color: transparent;
+      }
+      span {
+        display: table-cell;
+        vertical-align: middle;
+      }
+    }
+    a {
+      display: table-cell;
+      color: #555555;
+      vertical-align: middle;
+      font-size: 15px;
     }
   }
 }

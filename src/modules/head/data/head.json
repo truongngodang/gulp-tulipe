@@ -11,9 +11,9 @@
         "library/font-awesome/css/font-awesome.min.css"
       ],
       "js": [
-        "library/bootstrap/dist/jquery.min.js",
+        "library/jquery/dist/jquery.min.js",
         "library/bootstrap/dist/js/bootstrap.min.js",
-        "assets/js/custom.js"
+        "assets/js/main.js"
       ]
     },
     "home1": {
@@ -27,9 +27,9 @@
         "library/font-awesome/css/font-awesome.min.css"
       ],
       "js": [
-        "library/bootstrap/dist/jquery.min.js",
+        "library/jquery/dist/jquery.min.js",
         "library/bootstrap/dist/js/bootstrap.min.js",
-        "assets/js/custom.js"
+        "assets/js/main.js"
       ]
     },
     "home2": {
@@ -43,9 +43,9 @@
         "library/font-awesome/css/font-awesome.min.css"
       ],
       "js": [
-        "library/bootstrap/dist/jquery.min.js",
+        "library/jquery/dist/jquery.min.js",
         "library/bootstrap/dist/js/bootstrap.min.js",
-        "assets/js/custom.js"
+        "assets/js/main.js"
       ]
     }
   }

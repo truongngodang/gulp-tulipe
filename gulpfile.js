@@ -21,6 +21,31 @@ const browserSync = require('browser-sync').create();
 const pug = require('gulp-pug');
 const fs = require('fs');
 
+var errorHandler = function() {
+    return plumber(function(error){
+        var msg = error.codeFrame.replace(/\n/g, '\n    ');
+
+        gutil.log('|- ' + gutil.colors.bgRed.bold('Build Error in ' + error.plugin));
+        gutil.log('|- ' + gutil.colors.bgRed.bold(error.message));
+        gutil.log('|- ' + gutil.colors.bgRed.regular('>>>'));
+        gutil.log('|\n    ' + msg + '\n           |');
+        gutil.log('|- ' + gutil.colors.bgRed.regular('<<<'));
+    });
+};
+
+var prettify = require('gulp-html-prettify');
+
+var options = {
+    htmlPrettify: {
+        'indent_size': 4,
+        'unformatted': ['pre', 'code'],
+        'indent_with_tabs': false,
+        'preserve_newlines': true,
+        'brace_style': 'expand',
+        'end_with_newline': true
+    }
+};
+
 // Bower sync
 gulp.task('browser-sync', function () {
     return browserSync.init({
@@ -64,8 +89,7 @@ gulp.task('scripts', function () {
         .pipe(concat('main.js'))
         .pipe(gulp.dest('dist/assets/js'))
         .pipe(rename({suffix: '.min'}))
-        .pipe(uglify())
-        .pipe(browserSync.stream());
+        .pipe(uglify());
 });
 
 //Compress Images
@@ -140,7 +164,13 @@ gulp.task('pug', function (done) {
         }))
         .pipe(gulp.dest('dist'))
         .on('end', done)
-        .pipe(browserSync.stream());
+});
+
+// html prety
+gulp.task('build-html', function () {
+   return gulp.src('dist/*.html')
+       .pipe(prettify(options.htmlPrettify))
+       .pipe(gulp.dest('dist'));
 });
 
 // Build html
@@ -148,14 +178,7 @@ gulp.task('html', function (cb) {
     return gulpSequence(
         'combine-data',
         'pug',
-        cb
-    );
-});
-
-//The default task DEV
-gulp.task('dev', function (cb) {
-    return gulpSequence(
-        'browser-sync', 'clean', 'html', 'styles', 'scripts', 'images', 'watch',
+        'build-html',
         cb
     );
 });
@@ -175,14 +198,33 @@ gulp.task('watch', function () {
     // Watch .pug files
     gulp.watch(
         ['src/*/**/data/*.json', 'src/*.pug', 'src/*/*.pug', 'src/**/*.pug'],
-        ['html']);
+        ['html', browserSync.reload]);
     // Watch .scss files
     gulp.watch('src/scss/**/*.scss', ['styles']);
 
     // Watch .js files
-    gulp.watch('src/scripts/**/*.js', ['scripts']);
+    gulp.watch('src/scripts/**/*.js', ['scripts', browserSync.reload]);
 
     // Watch image files
-    gulp.watch('src/images/**/*', ['images']);
+    gulp.watch('src/images/**/*', ['images', browserSync.reload]);
 
+});
+
+//The default task build
+gulp.task('build', function (cb) {
+    return gulpSequence(
+        'clean', 'styles', 'scripts', 'images', 'html',
+        cb
+    );
+});
+
+gulp.task('dev', function (cb) {
+    return gulpSequence(
+        'build',
+        [
+            'browser-sync',
+            'watch'
+        ],
+        cb
+    );
 });

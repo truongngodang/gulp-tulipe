@@ -1,5 +1,5 @@
 
-a, button {
+a:hover, button:hover, li:hover {
   @include trasition('fast');
 }
 
